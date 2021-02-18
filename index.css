@@ -1,0 +1,15 @@
+iframe#configPanel {
+    border: 1px solid white;
+    border-radius: 4px;
+    width: 100%;
+}
+
+div#codeBg {
+    background: repeating-linear-gradient(
+        45deg,
+        #222222,
+        #222222 10px,
+        #232323 10px,
+        #232323 20px
+    );
+}

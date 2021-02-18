@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="index.css" />
+        <script src="index.js"></script>
+
+        <title>Mödello</title>
+    </head>
+    <body class="bg-dark">
+        <!-- Navbar -->
+        <nav class="navbar-dark p-3">
+            <h1 class="navbar-brand text-light d-lg-inline">Mödello</h1>
+            <span class="navbar-text">Sablon feladatra sablon megoldás!</span>
+        </nav>
+
+        <div class="dropdown p-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="sablonDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Sablon
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="sablonDropdown">
+                <li><button class="dropdown-item" type="button" onclick="loadConfigPanel('inher')">C# Öröklődés Feladat</button></li>
+            </ul>
+        </div>
+
+        <!-- Tartalom -->
+        <div class="container-fluid p-3">
+            <div class="row">
+                
+                <!-- Paraméterek -->
+                <div class="col-sm-4">
+                    <iframe class="d-flex" id="configPanel" height="800">
+                    </iframe>
+                </div>
+
+
+                <!-- Kimenet -->
+                <div id="codeBg" class="col-sm-8">
+                    <pre><code class="text-light" id="codeOut">
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
