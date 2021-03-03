@@ -143,7 +143,7 @@ function execute() {
         let type = e.type
         let name = e.name
 
-        supFields += `        proctected ${type} _${name};\n`
+        supFields += `        protected ${type} _${name};\n`
         supParams += `${type} ${name}, `
         supConstrBody += `            _${name} = ${name};\n`
         supProps += `
