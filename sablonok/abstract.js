@@ -40,6 +40,8 @@ const subclassBase = `
 `
 
 let code
+let codeOut
+
 let supFieldsElement
 let supMethodsElement
 let subClassesElement
@@ -50,43 +52,32 @@ window.onload = function() {
     supFieldsElement = document.getElementById("sup_fields")
     supMethodsElement = document.getElementById("sup_methods")
     subClassesElement = document.getElementById("sub_classes")
+
+    codeOut = window.parent.document.getElementById("codeOut")
+    configPanelFrame = window.parent.document.getElementById("configPanel")
 }
 
 function newSupField() {
-    let element = document.createElement("li")
-    element.innerHTML = `
-        <input class="bg-dark text-light form-control m-2" placeholder="Típus (pl.: int)" name="sup_fieldType" />
-        <input class="bg-dark text-light form-control m-2" placeholder="Név" name="sup_fieldName" />
-    `
-
-    supFieldsElement.appendChild(element)
+    newFieldGroup("sup", supFieldsElement)
 }
 
 function newSupMethod() {
-    let element = document.createElement("li")
-    element.innerHTML = `
-        <input class="bg-dark text-light form-control m-2" placeholder="Visszatérítési típus (pl.: int)" name="sup_methodType" />
-        <input class="bg-dark text-light form-control m-2" placeholder="Név" name="sup_methodName" />
-        <input class="bg-dark text-light form-control m-2" placeholder="Paraméterek vesszővel elválasztva (pl.: int a, string b)" name="sup_methodParams" />
-        `
-
-    supMethodsElement.appendChild(element)
+    newMethodGroup("sup", supMethodsElement)
 }
 
 function newSubClass() {
-    let element = document.createElement("li")
-
-    element.innerHTML = `
+    newInputGroup(subClassesElement, `
         <input class="bg-dark text-light form-control m-2" placeholder="Osztály neve" id="sub${subClassCount}" />
-        
+            
         <span>Extra mezők</span>
         <button class="btn btn-dark p-2" type="button" onclick="newSubField(${subClassCount})">+</button><br />
         <ul id="sub${subClassCount}_fields"></ul><br />
-    `
+    `)
 
-    subClassesElement.appendChild(element)
     subFieldElements.push(document.getElementById(`sub${subClassCount}_fields`))
     subClassCount++;
+
+    updateParentHeight()
 }
 
 function newSubField(subclass) {
@@ -100,45 +91,20 @@ function newSubField(subclass) {
     subFieldElements[subclass].appendChild(element)
 }
 
-function fieldGroupToObjects(prefix) {
-    let types = Array.from(document.getElementsByName(prefix + "_fieldType")).map(e => e.value)
-    let names = Array.from(document.getElementsByName(prefix + "_fieldName")).map(e => e.value)
-
-    let results = []
-
-    for (let i = 0; i < names.length; i++) {
-        results.push({type: types[i], name: names[i]})
-    }
-
-    return results
-}
-
-function methodGroupToObjects(prefix) {
-    let types = Array.from(document.getElementsByName(prefix + "_methodType")).map(e => e.value)
-    let names = Array.from(document.getElementsByName(prefix + "_methodName")).map(e => e.value)
-    let paramLists = Array.from(document.getElementsByName(prefix + "_methodParams")).map(e => e.value)
-
-    let results = []
-
-    for (let i = 0; i < names.length; i++) {
-        results.push({type: types[i], name: names[i], params: paramLists[i]})
-    }
-
-    return results
-}
-
 function execute() {
     // Gather data
     let supName = document.getElementById("sup").value
     let supFieldInputs = fieldGroupToObjects("sup")
     let supMethodInputs = methodGroupToObjects("sup")
 
+    // Generate superclass
     let supFields = ""
     let supParams = ""
     let supConstrBody = ""
     let supProps = ""
     let baseParams = ""
 
+    // Fields
     supFieldInputs.forEach(e => {
         let type = e.type
         let name = e.name
@@ -157,6 +123,7 @@ function execute() {
         baseParams += `${name}, `
     })
 
+    // Methods
     let supMethods = ""
     let subOverridedMethods = ""
 
@@ -179,7 +146,7 @@ function execute() {
 
     baseParams = baseParams.substr(0, baseParams.length-2)
 
-
+    // Subclasses
     let subClasses = ""
     let instanceCalls = ""
     let instanceCount = Number(document.getElementById("instancecount").value)
@@ -239,5 +206,5 @@ function execute() {
     code = code.replaceAll("[subclasses]", subClasses)    
     code = code.replaceAll("[calls]", instanceCalls)
 
-    window.parent.document.getElementById("codeOut").innerText = code
+    showCode(code)
 }

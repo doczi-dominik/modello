@@ -47,44 +47,26 @@ namespace Feladat
 `
 
 let code
+let codeOut
+
 let supFieldsElement
 let subFieldsElement
 
 window.onload = function() {
     supFieldsElement = document.getElementById("sup_fields")
     subFieldsElement = document.getElementById("sub_fields")
+
+    codeOut = window.parent.document.getElementById("codeOut")
+    configPanelFrame = window.parent.document.getElementById("configPanel")
 }
 
 function newSupField() {
-    let element = document.createElement("li")
-    element.innerHTML = `
-        <input class="bg-dark text-light form-control m-2" placeholder="Típus (pl.: int)" name="sup_fieldType" />
-        <input class="bg-dark text-light form-control m-2" placeholder="Név" name="sup_fieldName" />
-    `
-    supFieldsElement.appendChild(element)
+    newFieldGroup("sup", supFieldsElement)
 }
+
 
 function newSubField() {
-    let element = document.createElement("li")
-    element.innerHTML = `
-        <input class="bg-dark text-light form-control m-2" placeholder="Típus (pl.: int)" name="sub_fieldType" />
-        <input class="bg-dark text-light form-control m-2" placeholder="Név" name="sub_fieldName" />
-    `
-
-    subFieldsElement.appendChild(element)
-}
-
-function fieldGroupToObjects(prefix) {
-    let types = Array.from(document.getElementsByName(prefix + "_fieldType")).map(e => e.value)
-    let names = Array.from(document.getElementsByName(prefix + "_fieldName")).map(e => e.value)
-
-    let results = []
-
-    for (let i = 0; i < names.length; i++) {
-        results.push({type: types[i], name: names[i]})
-    }
-
-    return results
+    newFieldGroup("sub", subFieldsElement)
 }
 
 function execute() {
@@ -94,7 +76,7 @@ function execute() {
     let subName = document.getElementById("sub").value
     let subFieldInputs = fieldGroupToObjects("sub")
 
-    // Generate data
+    // Generate superclass
     let supFields = ""
     let supParams = ""
     let supConstrBody = ""
@@ -105,6 +87,7 @@ function execute() {
     let inputConverts = ""
     let inputParams = ""
 
+    // Fields
     supFieldInputs.forEach(e => {
         let type = e.type
         let name = e.name
@@ -138,6 +121,7 @@ function execute() {
         inputParams += `${name}, `
     });
 
+    // Generate subclass
     let subFields = ""
     let subParams = supParams
     let subConstrBody = ""
@@ -202,5 +186,5 @@ function execute() {
     code = code.replaceAll("[inputconverts]", inputConverts)
     code = code.replaceAll("[inputparams]", inputParams)
 
-    window.parent.document.getElementById("codeOut").innerText = code
+    showCode(code)
 }
